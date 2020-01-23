@@ -134,7 +134,7 @@ namespace Dictionaries
                 Console.WriteLine("Удалено!");
             }
             else
-                Console.WriteLine("Введённого слова нет в словаре."); 
+                Console.WriteLine("Введённого слова нет в словаре.");
         }
 
         private void AddTranslate(int index)
@@ -148,7 +148,7 @@ namespace Dictionaries
             }
             Console.WriteLine("Введите добавляемый вариант перевода.");
             string newString = new Writer().CheckInput();
-            allSections.sections.ElementAt(index).words.ElementAt(indexWord).translations.Add(newString); 
+            allSections.sections.ElementAt(index).words.ElementAt(indexWord).translations.Add(newString);
         }
 
         private void DeleteTranslate(int index)
@@ -178,14 +178,14 @@ namespace Dictionaries
         {
             Console.Clear();
             int indexWord = SearchWordIndex(index);
-            if(indexWord == -1)
+            if (indexWord == -1)
             {
                 Console.WriteLine("Введённого слова нет в словаре.");
                 return;
             }
             Console.WriteLine("Введите слово для замены.");
             string newString = new Writer().CheckInput();
-            allSections.sections.ElementAt(index).words.ElementAt(indexWord).name = newString;  
+            allSections.sections.ElementAt(index).words.ElementAt(indexWord).name = newString;
             allSections.sections.ElementAt(index).words.Sort();
         }
 
@@ -193,7 +193,7 @@ namespace Dictionaries
         {
             Console.Clear();
             int indexWord = SearchWordIndex(index);
-            if(indexWord == -1)
+            if (indexWord == -1)
             {
                 Console.WriteLine("Введённого слова нет в словаре.");
                 return;
@@ -205,7 +205,7 @@ namespace Dictionaries
             Console.WriteLine("Введите новый вариант перевода");
             string newTranslate = new Writer().CheckInput();
             allSections.sections.ElementAt(index).words.ElementAt(indexWord).translations.Add(newTranslate);
-            
+
         }
 
         private int SearchWordIndex(int index)
@@ -217,7 +217,8 @@ namespace Dictionaries
             {
                 tempWord = allSections.sections.ElementAt(index).WordSearch(word);
                 return allSections.sections.ElementAt(index).words.IndexOf(tempWord);
-            }catch { return -1; }
+            }
+            catch { return -1; }
         }
     }
 }

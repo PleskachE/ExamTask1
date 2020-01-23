@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Dictionaries
 {
+    enum VariantOfTranslation { OneWord, Phrase }
+
     public class Translator
     {
         public Translator() { }
@@ -16,29 +18,36 @@ namespace Dictionaries
             if (word == "")
                 return word;
             String[] words = result.Split(new char[] { ' ', ',', '.', '!', '?', '-' }, StringSplitOptions.RemoveEmptyEntries);
-            return result = Translate(words, section, result);
+
+            if (words.Length == 1)
+                result = Translate(VariantOfTranslation.OneWord, words, section, result);
+            else
+                result = Translate(VariantOfTranslation.Phrase, words, section, result);
+            return result;
         }
 
-        private string Translate(String[] words, Section section, string result)
+        private string Translate(VariantOfTranslation value, String[] words, Section section, string result)
         {
-            if (words.Length == 1)
+            Word tempWord = new Word();
+            switch (value)
             {
-                Word tempWord = section.WordSearch(words[0]);
-                try
-                {
-                    for (int i = 0; i < tempWord.translations.Count; i++)
-                        result += tempWord.translations.ElementAt(i) + ", ";
-                }
-                catch { result += words[0]; }
-            }
-            else
-            {
-                for (int i = 0; i < words.Length; i++)
-                {
-                    Word tempWord = section.WordSearch(words[i]);
-                    try { result += tempWord.translations.ElementAt(0) + " "; }
-                    catch { result += words[i] + " "; }
-                }
+                case VariantOfTranslation.OneWord:
+                    tempWord = section.WordSearch(words[0]);
+                    try
+                    {
+                        for (int i = 0; i < tempWord.translations.Count; i++)
+                            result += tempWord.translations.ElementAt(i) + ", ";
+                    }
+                    catch { result += words[0]; }
+                    break;
+                case VariantOfTranslation.Phrase:
+                    for (int i = 0; i < words.Length; i++)
+                    {
+                        tempWord = section.WordSearch(words[i]);
+                        try { result += tempWord.translations.ElementAt(0) + " "; }
+                        catch { result += words[i] + " "; }
+                    }
+                    break;
             }
             return result;
         }
