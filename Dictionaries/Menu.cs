@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Dictionaries
 {
+
+    enum MenuAction { Return, EditorMenu, TranslateMenu }
+
     public class Menu
     {
         public Menu() { }
@@ -16,21 +19,33 @@ namespace Dictionaries
             if (choiceStartMenu == -1)
                 return allSections;
             int indexSection = ChoiceSection(allSections);
-            if(indexSection == -1)
-                return allSections; 
+            if (indexSection == -1)
+                allSections = MenuSection(MenuAction.Return, allSections, indexSection);
             else if (choiceStartMenu == 2)
-            {
-                Editor editor = new Editor(allSections);
-                allSections = editor.EditorSection(indexSection);
-            }
+                allSections = MenuSection(MenuAction.EditorMenu, allSections, indexSection);
             else
-            { 
-                string result;
-                Console.WriteLine("Введите слово которое хотите перевести.");
-                result = new Writer().CheckInput();
-                result = new Translator().SplittingPhraseIntoWords(result, allSections.sections.ElementAt(indexSection));
-                Console.WriteLine(result);
-                ChoicheInputFile(result);
+                allSections = MenuSection(MenuAction.TranslateMenu, allSections, indexSection);
+            return allSections;
+        }
+
+        private AllSections MenuSection(MenuAction value, AllSections allSections, int indexSection)
+        {
+            switch (value)
+            {
+                case MenuAction.Return:
+                    return allSections;
+                case MenuAction.EditorMenu:
+                    Editor editor = new Editor(allSections);
+                    allSections = editor.EditorSection(indexSection);
+                    break;
+                case MenuAction.TranslateMenu:
+                    string result;
+                    Console.WriteLine("Введите слово которое хотите перевести.");
+                    result = new Writer().CheckInput();
+                    result = new Translator().SplittingPhraseIntoWords(result, allSections.sections.ElementAt(indexSection));
+                    Console.WriteLine(result);
+                    ChoicheInputFile(result);
+                    break;
             }
             return allSections;
         }

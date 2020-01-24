@@ -36,6 +36,12 @@
           </translations>
         </Word>
         <Word>
+          <name>проверка</name>
+          <translations>
+            <string>check</string>
+          </translations>
+        </Word>
+        <Word>
           <name>солнце</name>
           <translations>
             <string>sun</string>
