@@ -98,115 +98,154 @@ namespace Dictionaries
             switch (value)
             {
                 case EditorAction.AddSection:
-                    Console.WriteLine("Введите название для нового словаря");
-                    string name = new Writer().CheckInput();
-                    bool check = true;
-                    try
-                    {
-                        for (int i = 0; i < allSections.sections.Count; i++)
-                        {
-                            if (allSections.sections.ElementAt(i).name == name)
-                            {
-                                Console.WriteLine("Этот словарь уже есть в приложении.");
-                                check = false;
-                                break;
-                            }
-                        }
-                    }
-                    catch { }
-                    if (check == true)
-                    {
-                        allSections.sections.Add(new Section(name));
-                        Console.WriteLine("Новый словарь добавлен!");
-                    }
+                    AddSection();
                     break;
                 case EditorAction.DeleteSection:
-                    allSections.sections.RemoveAt(index);
+                    DeleteSection(index);
                     break;
                 case EditorAction.AddWord:
-                    Console.WriteLine("Введите переводимое слово");
-                    name = new Writer().CheckInput();
-                    Console.WriteLine("Введите его перевод.");
-                    string newString = new Writer().CheckInput();
-                    if (allSections.sections.ElementAt(index).WordSearch(name) == null)
-                    {
-                        allSections.sections.ElementAt(index).words.Add(new Word(name, newString));
-                        Console.WriteLine("Новое слово и его перевод добавлены!");
-                    }
-                    else
-                        Console.WriteLine("Данное слово уже есть в словаре. Добавьте его перевод.");
-                    allSections.sections.ElementAt(index).words.Sort();
+                    AddWord(index);
                     break;
                 case EditorAction.DeleteWord:
-                    Console.WriteLine("Введите слово которое хотите удалить!");
-                    Word deleteWord = allSections.sections.ElementAt(index).WordSearch(new Writer().CheckInput());
-                    if (deleteWord != null)
-                    {
-                        allSections.sections.ElementAt(index).words.Remove(deleteWord);
-                        Console.WriteLine("Удалено!");
-                    }
-                    else
-                        Console.WriteLine("Введённого слова нет в словаре.");
+                    DeleteWord(index);
                     break;
                 case EditorAction.ReplacementWord:
-                    int indexWord = SearchWordIndex(index);
-                    if (indexWord == -1)
-                    {
-                        Console.WriteLine("Введённого слова нет в словаре.");
-                        return;
-                    }
-                    Console.WriteLine("Введите слово для замены.");
-                    newString = new Writer().CheckInput();
-                    allSections.sections.ElementAt(index).words.ElementAt(indexWord).name = newString;
-                    allSections.sections.ElementAt(index).words.Sort();
+                    ReplacementWord(index);
                     break;
                 case EditorAction.AddTranslate:
-                    indexWord = SearchWordIndex(index);
-                    if (indexWord == -1)
-                    {
-                        Console.WriteLine("Данного слова нет в словаре. Попробуйте изменить запрос или добавить его в словарь.");
-                        return;
-                    }
-                    Console.WriteLine("Введите добавляемый вариант перевода.");
-                    newString = new Writer().CheckInput();
-                    allSections.sections.ElementAt(index).words.ElementAt(indexWord).translations.Add(newString);
+                    AddTranslate(index);
                     break;
                 case EditorAction.DeleteTranslate:
-                    indexWord = SearchWordIndex(index);
-                    Console.WriteLine("Введите удаляемый вариант перевода.");
-                    newString = new Writer().CheckInput();
-                    try
-                    {
-                        if (allSections.sections.ElementAt(index).words.ElementAt(indexWord).translations.Count > 1)
-                            allSections.sections.ElementAt(index).words.ElementAt(indexWord).translations.Remove(newString);
-                        else
-                        {
-                            Console.WriteLine("Данный перевод является единственным у этого слова и его нельзя удалить.");
-                            Console.ReadLine();
-                        }
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Выбранное слово не имеет введённого перевода.");
-                        Console.ReadLine();
-                    }
+                    DeleteTranslate(index);
                     break;
                 case EditorAction.ReplacemetTranslate:
-                    indexWord = SearchWordIndex(index);
-                    if (indexWord == -1)
-                    {
-                        Console.WriteLine("Введённого слова нет в словаре.");
-                        return;
-                    }
-                    Console.WriteLine("Введите заменяемый вариант перевода.");
-                    newString = new Writer().CheckInput();
-                    try { allSections.sections.ElementAt(index).words.ElementAt(indexWord).translations.Remove(newString); }
-                    catch { Console.WriteLine("Данного перевода нет в словаре."); }
-                    Console.WriteLine("Введите новый вариант перевода");
-                    string newTranslate = new Writer().CheckInput();
-                    allSections.sections.ElementAt(index).words.ElementAt(indexWord).translations.Add(newTranslate);
+                    ReplacemetTranslate(index);
                     break;
             }
+        }
+        private void AddSection()
+        {
+            Console.WriteLine("Введите название для нового словаря");
+            string name = new Writer().CheckInput();
+            bool check = true;
+            try
+            {
+                for (int i = 0; i < allSections.sections.Count; i++)
+                {
+                    if (allSections.sections.ElementAt(i).name == name)
+                    {
+                        Console.WriteLine("Этот словарь уже есть в приложении.");
+                        check = false;
+                        break;
+                    }
+                }
+            }
+            catch { }
+            if (check == true)
+            {
+                allSections.sections.Add(new Section(name));
+                Console.WriteLine("Новый словарь добавлен!");
+            }
+        }
+
+        private void DeleteSection(int index)
+        {
+            allSections.sections.RemoveAt(index);
+        }
+
+        private void AddWord(int index)
+        {
+            Console.WriteLine("Введите переводимое слово");
+            string name = new Writer().CheckInput();
+            Console.WriteLine("Введите его перевод.");
+            string newString = new Writer().CheckInput();
+            if (allSections.sections.ElementAt(index).WordSearch(name) == null)
+            {
+                allSections.sections.ElementAt(index).words.Add(new Word(name, newString));
+                Console.WriteLine("Новое слово и его перевод добавлены!");
+            }
+            else
+                Console.WriteLine("Данное слово уже есть в словаре. Добавьте его перевод.");
+            allSections.sections.ElementAt(index).words.Sort();
+        }
+
+        private void DeleteWord(int index)
+        {
+            Console.WriteLine("Введите слово которое хотите удалить!");
+            Word deleteWord = allSections.sections.ElementAt(index).WordSearch(new Writer().CheckInput());
+            if (deleteWord != null)
+            {
+                allSections.sections.ElementAt(index).words.Remove(deleteWord);
+                Console.WriteLine("Удалено!");
+            }
+            else
+                Console.WriteLine("Введённого слова нет в словаре.");
+        }
+
+        private void ReplacementWord(int index)
+        {
+            int indexWord = SearchWordIndex(index);
+            if (indexWord == -1)
+            {
+                Console.WriteLine("Введённого слова нет в словаре.");
+                return;
+            }
+            Console.WriteLine("Введите слово для замены.");
+            string newString = new Writer().CheckInput();
+            allSections.sections.ElementAt(index).words.ElementAt(indexWord).name = newString;
+            allSections.sections.ElementAt(index).words.Sort();
+        }
+
+        private void AddTranslate(int index)
+        {
+            int indexWord = SearchWordIndex(index);
+            if (indexWord == -1)
+            {
+                Console.WriteLine("Данного слова нет в словаре. Попробуйте изменить запрос или добавить его в словарь.");
+                return;
+            }
+            Console.WriteLine("Введите добавляемый вариант перевода.");
+            string newString = new Writer().CheckInput();
+            allSections.sections.ElementAt(index).words.ElementAt(indexWord).translations.Add(newString);
+        }
+
+        private void DeleteTranslate(int index)
+        {
+            int indexWord = SearchWordIndex(index);
+            Console.WriteLine("Введите удаляемый вариант перевода.");
+            string newString = new Writer().CheckInput();
+            try
+            {
+                if (allSections.sections.ElementAt(index).words.ElementAt(indexWord).translations.Count > 1)
+                    allSections.sections.ElementAt(index).words.ElementAt(indexWord).translations.Remove(newString);
+                else
+                {
+                    Console.WriteLine("Данный перевод является единственным у этого слова и его нельзя удалить.");
+                    Console.ReadLine();
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Выбранное слово не имеет введённого перевода.");
+                Console.ReadLine();
+            }
+        }
+
+        private void ReplacemetTranslate(int index)
+        {
+            int indexWord = SearchWordIndex(index);
+            if (indexWord == -1)
+            {
+                Console.WriteLine("Введённого слова нет в словаре.");
+                return;
+            }
+            Console.WriteLine("Введите заменяемый вариант перевода.");
+            string newString = new Writer().CheckInput();
+            try { allSections.sections.ElementAt(index).words.ElementAt(indexWord).translations.Remove(newString); }
+            catch { Console.WriteLine("Данного перевода нет в словаре."); }
+            Console.WriteLine("Введите новый вариант перевода");
+            string newTranslate = new Writer().CheckInput();
+            allSections.sections.ElementAt(index).words.ElementAt(indexWord).translations.Add(newTranslate);
         }
     }
 }
